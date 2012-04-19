@@ -1,0 +1,163 @@
+{
+    "name": "Prywin",
+    "race": "elf",
+    "alignment": "NE",
+    "abilities": {
+        "strength": {
+            "base":9
+        },
+        "dexterity": {
+            "base": 14,
+            "racial": 2
+        },
+        "constitution": {
+            "base": 12,
+            "racial": -2
+        },
+        "intelligence": {
+            "base":16,
+            "racial":2
+        },
+        "wisdom": {
+            "base":10
+        },
+        "charisma": {
+            "base":10
+        }
+    },
+    "levels": [
+        {
+            "class": "thief",
+            "bonus": {
+                "skill": 1
+            }
+        },
+        {
+            "class": "cleric",
+            "bonus": {
+                "skill": 1
+            }
+        },
+        {
+            "class": "mage",
+            "bonus": {
+                "skill": 1,
+                "hp": 0
+            }
+        },
+        {
+            "class": "mage",
+            "bonus": {
+                "skill": 1,
+                "abilities": {
+                    "intelligence": {
+                        "level":1
+                    }
+                }
+            }
+        },
+        {
+            "class": "mage",
+            "bonus": {
+                "skill": 1
+            }
+        },
+        {
+            "class": "mage",
+            "bonus": {
+                "skill": 1
+            }
+        },
+        {
+            "class": "mage",
+            "bonus": {
+                "skill": 1
+            }
+        },
+        {
+            "class": "mage",
+            "bonus": {
+                "skill": 1,
+                "abilities": {
+                    "intelligence": {
+                        "level":1
+                    }
+                }
+            }
+        }
+    ],
+    "other": {
+        "gender": "M",
+        "height": 175,
+        "weight": 57.5,
+        "eyes": null,
+        "hair": null,
+        "skin": null,
+        "age": null
+    },
+    "buffs": null,
+    "equip": {
+        "slots": {
+            "hat": null,
+            "head": {
+                "name": "Headband of Vast Intelligence +2",
+                "description": "...",
+                "abilities": {
+                    "intelligence":{
+                        "enhancement": 2
+                    }
+                },
+                "skills": {
+                    "crafting": [
+                        "build traps"
+                    ]
+                }
+            },
+            "neck": null,
+            "shoulders": {
+                "name": "Cloak of Resistance +1",
+                "description": "...",
+                "saves": {
+                    "fortitude": {
+                        "resistance":1
+                    },
+                    "reflex": {
+                        "resistance":1
+                    },
+                    "will": {
+                        "resistance":1
+                    }
+                }
+            },
+            "torso": null,
+            "belt": null,
+            "arms": {
+                "name": "Bracers of defence +1",
+                "description": "...",
+                "armor": {
+                    "bonus": 1
+                }
+            },
+            "ring1": {
+                "name": "Ring of Sustenance",
+                "description": "...",
+                "abilities": null
+            },
+            "ring2": {
+                "name": "Arcane Bond",
+                "description": "Signet Ring",
+                "abilities": null
+            },
+            "hands": {
+                "name": "Gauntlets of Dexterity +2",
+                "description": "...",
+                "abilities": {
+                    "dexterity":{
+                        "enhancement": 2
+                    }
+                }
+            },
+            "feet": null
+        }
+    }
+}
