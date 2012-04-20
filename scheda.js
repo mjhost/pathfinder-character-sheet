@@ -13,6 +13,7 @@ scheda = {
                 }else{
                     $abilities.find('.'+ability).removeClass("hasBonus");
                 }
+                $abilities.find('.'+ability + ' th.heading').data('title', '');
                 $abilities.find('.'+ability + ' th.heading').attr('title', abilities[ability].reason.join(', '));
                 $abilities.find('.'+ability+ ' .score').text(abilities[ability].score.toString());
                 $abilities.find('.'+ability+ ' .modifier').text(rules.abilities.getModifier(abilities[ability].score).toString());
@@ -102,27 +103,17 @@ scheda = {
 
 $(document).ready(function(){
     console.log('document ready');
+    scheda.writeAvailableBuffs(rules.buffs);
     $.ajax({
-        url:'buffs.json',
+        url:'prywin.json',
         success:function(data){
-            rules.buffs = data;
-            scheda.writeAvailableBuffs(rules.buffs);
-            $.ajax({
-                url:'prywin.json',
-                success:function(data){
-                    console.log('character loaded');
-                    currentCharacter = data;
-                    currentCharacter.buffs = {};
-                    scheda.writeCharacter(currentCharacter);
-                },
-                error:function(jqXHR, textStatus, errorThrown){
-                  console.log('error loading character', jqXHR, textStatus, errorThrown);  
-                },
-                dataType:'json'
-            });
+            console.log('character loaded');
+            currentCharacter = data;
+            currentCharacter.buffs = {};
+            scheda.writeCharacter(currentCharacter);
         },
         error:function(jqXHR, textStatus, errorThrown){
-          console.log('error loading buffs', jqXHR, textStatus, errorThrown);  
+          console.log('error loading character', jqXHR, textStatus, errorThrown);  
         },
         dataType:'json'
     });
