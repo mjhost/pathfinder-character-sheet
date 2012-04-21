@@ -2,6 +2,7 @@
     "name": "Prywin",
     "race": "elf",
     "alignment": "NE",
+"testing ipad": true,
     "abilities": {
         "strength": {
             "base":9
