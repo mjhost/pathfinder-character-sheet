@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title>scheda</title>
     <meta name="author" content="Paolo Mariotti" />
@@ -8,6 +9,7 @@
     <script type="application/x-javascript" src="assets/js/bootstrap-tooltip.js"></script>
     <script type="application/x-javascript" src="rules.js"></script>
     <script type="application/x-javascript" src="buffs.js"></script>
+    <script type="application/x-javascript" src="classes.js"></script>
     <script type="application/x-javascript" src="scheda.js"></script>
     <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="style.css" />
@@ -47,7 +49,7 @@
         <div class="row-fluid">
           <div class="span9">
             <div class="row-fluid">
-              <div class="span3">
+              <div class="span6">
                 <table class="abilities table table-bordered table-striped" width="100%">
                   <tr>
                     <th class="ability">Ability</th>
@@ -87,7 +89,25 @@
                 </table>
               </div>
               <div class="span6">
+                <table class="combat table table-bordered table-striped">
+                  <caption>Combat</caption>
+                  <tr>
+                    <th>AC</th>
+                    <td class="ac"></td>
+                  </tr>
+                  <tr>
+                    <th>Attack</th>
+                    <td class="attack"></td>
+                  </tr>
+                  <tr>
+                    <th>Damage</th>
+                    <td class="damage"></td>
+                  </tr>
+                </table>
+              </div>
+              <div class="span6">
                 <table class="equip table table-bordered table-striped">
+                  <caption>Equipment</caption>
                   <tr>
                     <th>Slot</th>
                     <th>Name</th>
