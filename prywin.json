@@ -28,7 +28,7 @@
     },
     "levels": [
         {
-            "class": "thief",
+            "class": "rogue",
             "bonus": {
                 "skill": 1
             }
@@ -40,14 +40,14 @@
             }
         },
         {
-            "class": "mage",
+            "class": "cleric",
             "bonus": {
                 "skill": 1,
                 "hp": 0
             }
         },
         {
-            "class": "mage",
+            "class": "wizard",
             "bonus": {
                 "skill": 1,
                 "abilities": {
@@ -58,25 +58,25 @@
             }
         },
         {
-            "class": "mage",
+            "class": "cleric",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "mage",
+            "class": "wizard",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "mage",
+            "class": "wizard",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "mage",
+            "class": "wizard",
             "bonus": {
                 "skill": 1,
                 "abilities": {

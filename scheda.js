@@ -59,6 +59,7 @@ scheda = {
     },
     writeBuffables: function(character){
         scheda.writeAbilities(rules.getAbilities(currentCharacter));
+        $('#scheda table.combat td.attack').html(rules.combat.getBaseAttackBonus(rules.getAggregateLevels(currentCharacter.levels)));
     },
     writeEquip: function(equip){
         var template, slot, $slot;

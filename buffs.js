@@ -58,7 +58,7 @@
             },
             "adjustment":{
                 "parameter": "caster level",
-                "type":"number",
+                "parameter type":"number",
                 "multiplier": function(param){
                     return Math.max((param-param%3)/3+1, 3);
                 }
@@ -70,4 +70,4 @@
             }
         }
     };
-}(rules));
+}(window.rules));
