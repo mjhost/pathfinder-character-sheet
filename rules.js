@@ -8,7 +8,15 @@ var rules = {
             return (temp > 0 && level > 0)? temp : 0;
         }
     },
-    combat:{        
+    sizes:['Colossal', 'Gargantuan', 'Huge', 'Large', 'Medium', 'Small', 'Tiny', 'Diminutive', 'Fine'],
+    combat:{
+        getSizeBonus:function(character){
+            var size = character.size -4;
+            if(size == 0){
+                return 0;
+            }
+            return (size<0?-1:1)*Math.pow(2,Math.abs(size)-1);
+        },
         getBaseAttackBonus: function(levels){
             var babTotal=0, cl;
             for(cl in levels){
@@ -64,7 +72,7 @@ var rules = {
                     for(ability in character.levels[iterator].bonus.abilities){
                         if(character.levels[iterator].bonus.abilities.hasOwnProperty(ability)){
                             computed[ability].level = (computed[ability].level || 0) + character.levels[iterator].bonus.abilities[ability].level;
-                            computed[ability].reason.push('Level ' + (Math.valueOf(iterator)+1)  + ' +1');
+                            computed[ability].reason.push('Level ' + (parseInt(iterator)+1)  + ' +1');
                         }
                     }
                 }

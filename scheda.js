@@ -3,23 +3,20 @@ var currentCharacter, scheda;
 scheda = {
     writeAbilities: function(abilities){
         var ability, $abilities;
-        //console.log(abilities);
         $abilities = $('.abilities')
         for(ability in abilities){
             if(abilities.hasOwnProperty(ability)){
-                //console.log(ability, abilities[ability]);
                 if(abilities[ability].hasBonus){
                     $abilities.find('.'+ability).addClass("hasBonus");
                 }else{
                     $abilities.find('.'+ability).removeClass("hasBonus");
                 }
-                $abilities.find('.'+ability + ' th.heading').data('title', '');
-                $abilities.find('.'+ability + ' th.heading').attr('title', abilities[ability].reason.join(', '));
+                $abilities.find('.'+ability + ' th.heading').attr('data-original-title',abilities[ability].reason.join(', '));
                 $abilities.find('.'+ability+ ' .score').text(abilities[ability].score.toString());
                 $abilities.find('.'+ability+ ' .modifier').text(rules.abilities.getModifier(abilities[ability].score).toString());
             }
         }
-        $abilities.tooltip({selector:'th.heading', placement:'right'});
+        $abilities.find('th.heading').tooltip({placement:'right'});
     },
     writeAvailableBuffs: function(buffs){
         var buff, template, $buff;
@@ -52,14 +49,24 @@ scheda = {
                     $buff.find('a').prepend("<i class='icon-star-empty icon-yellow'></i>");
                 }
                 if(buffs[buff].hasOwnProperty('abilities')){
-                    scheda.writeAbilities(rules.getAbilities(currentCharacter));
+                    scheda.writeBuffables(rules.getAbilities(currentCharacter));
                 }
                 return false;
             });
     },
     writeBuffables: function(character){
-        scheda.writeAbilities(rules.getAbilities(currentCharacter));
-        $('#scheda table.combat td.attack').html(rules.combat.getBaseAttackBonus(rules.getAggregateLevels(currentCharacter.levels)));
+        var bab, sizeBonus, abilities;
+        abilities = rules.getAbilities(currentCharacter);
+        scheda.writeAbilities(abilities);
+        
+        bab = rules.combat.getBaseAttackBonus(rules.getAggregateLevels(currentCharacter.levels));
+        sizeBonus = rules.combat.getSizeBonus(currentCharacter);
+        
+        //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
+        //console.log('ranged', bab, parseInt($('table.abilities tr.dexterity td.modifier').text()), sizeBonus);
+        
+        $('#scheda table.combat td.attack.melee').html(bab + parseInt($('table.abilities tr.strength td.modifier').text()) + sizeBonus);
+        $('#scheda table.combat td.attack.ranged').html(bab + parseInt($('table.abilities tr.dexterity td.modifier').text()) + sizeBonus);
     },
     writeEquip: function(equip){
         var template, slot, $slot;
@@ -89,12 +96,11 @@ scheda = {
         return aInfo.join(', ')
     },
     writeCharacter: function(character){
-        
         $('#scheda .character .name h1').html(character.name + ' <small>(' + character.race + ' ' + character.alignment + ' )</small>');
         $('#scheda .character .levels h2').html(scheda.getLevels(rules.getAggregateLevels(currentCharacter.levels)));
-        $('#scheda .character .level h2').html('Lvl ' + rules.getTotalLevel(currentCharacter.levels));
-        
+        $('#scheda .character .level h2').html('Lvl ' + rules.getTotalLevel(currentCharacter.levels));        
         $('#scheda .character .other-info').html(scheda.getOtherInfos(currentCharacter));
+        
         scheda.writeBuffables(currentCharacter);
         scheda.writeEquip(currentCharacter.equip);
     }
