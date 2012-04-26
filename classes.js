@@ -2,57 +2,72 @@
     rules.classes = {
         barbarian:{
             combat:{
-                bab:'melee'
+                bab: function(level){
+                    return rules.combat.bab.melee(level);
+                }                
             }
         },
         bard:{
             combat:{
-                bab:'hybrid'
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
             }
         },
         cleric:{
             combat:{
-                bab:'hybrid'
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
             }
         },
         druid:{
             combat:{
-                bab:'hybrid'
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
             }
         },
         fighter:{
             combat:{
-                bab:'melee'
+                bab:function(level){
+                    return rules.combat.bab.melee(level);
+                }
             }
         },
         monk:{
             combat:{
-                bab:'hybrid'
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
             }
         },
         paladin:{
             combat:{
-                bab:'melee'
+                bab:function(level){
+                    return rules.combat.bab.melee(level);
+                }
             }
         },
         ranger:{
             combat:{
-                bab:'melee'
+                bab:function(level){
+                    return rules.combat.bab.melee(level);
+                }
             }
         },
         rogue:{
             combat:{
-                bab:'hybrid'
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
             }
         },
         sorcerer:{
             combat:{
-                bab:'caster'                
-            }
-        },
-        wizard:{
-            combat:{
-                bab:'caster'                
+                bab:function(level){
+                    return rules.combat.bab.caster(level);
+                }
             }
         }
     };

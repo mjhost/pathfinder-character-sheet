@@ -9,6 +9,14 @@ var rules = {
         }
     },
     sizes:['Colossal', 'Gargantuan', 'Huge', 'Large', 'Medium', 'Small', 'Tiny', 'Diminutive', 'Fine'],
+    saves:{
+        strong: function(level){
+            return Math.floor(level/2)+2;
+        },
+        normal: function(level){
+            return Math.floor(level/3);
+        }
+    },
     combat:{
         getSizeBonus:function(character){
             var size = character.size -4;
@@ -21,8 +29,9 @@ var rules = {
             var babTotal=0, cl;
             for(cl in levels){
                 if(levels.hasOwnProperty(cl)){
-                    console.log(cl, rules.classes[cl].combat.bab);
-                    babTotal += rules.combat.bab[rules.classes[cl].combat.bab].call(this, levels[cl]);
+                    //console.log(cl, rules.classes[cl].combat.bab);
+                    babTotal += rules.classes[cl].combat.bab(levels[cl]);
+                    //babTotal += rules.combat.bab[rules.classes[cl].combat.bab].call(this, levels[cl]);
                 }
             }
             return babTotal;
