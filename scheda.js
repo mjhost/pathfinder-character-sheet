@@ -66,8 +66,8 @@ scheda = {
         //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
         //console.log('ranged', bab, parseInt($('table.abilities tr.dexterity td.modifier').text()), sizeBonus);
         
-        $('#scheda table.combat td.attack.melee').html(bab + parseInt($('table.abilities tr.strength td.modifier').text()) + sizeBonus);
-        $('#scheda table.combat td.attack.ranged').html(bab + parseInt($('table.abilities tr.dexterity td.modifier').text()) + sizeBonus);
+        $('#scheda table.combat td.attack.melee').html(bab + rules.abilities.getModifier(character.computed.abilities.strength.score) + sizeBonus);
+        $('#scheda table.combat td.attack.ranged').html(bab + rules.abilities.getModifier(character.computed.abilities.dexterity.score) + sizeBonus);
     },
     writeEquip: function(equip){
         var template, slot, $slot;
