@@ -49,18 +49,19 @@ scheda = {
                     $buff.find('a').prepend("<i class='icon-star-empty icon-yellow'></i>");
                 }
                 if(buffs[buff].hasOwnProperty('abilities')){
-                    scheda.writeBuffables(rules.getAbilities(currentCharacter));
+                    scheda.updateCharacter(currentCharacter);
+                    scheda.writeBuffables(currentCharacter);
                 }
                 return false;
             });
     },
     writeBuffables: function(character){
         var bab, sizeBonus, abilities;
-        abilities = rules.getAbilities(currentCharacter);
-        scheda.writeAbilities(abilities);
+       
+        scheda.writeAbilities(character.computed.abilities);
         
-        bab = rules.combat.getBaseAttackBonus(rules.getAggregateLevels(currentCharacter.levels));
-        sizeBonus = rules.combat.getSizeBonus(currentCharacter);
+        bab = rules.combat.getBaseAttackBonus(character.computed.levels);
+        sizeBonus = rules.combat.getSizeBonus(character);
         
         //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
         //console.log('ranged', bab, parseInt($('table.abilities tr.dexterity td.modifier').text()), sizeBonus);
@@ -95,7 +96,14 @@ scheda = {
         aInfo.push("weight " + character.other.weight + "kg");
         return aInfo.join(', ')
     },
+    updateCharacter:function(character){
+        character.computed = {};
+        character.computed.abilities =  rules.getAbilities(currentCharacter);
+        character.computed.levels = rules.getAggregateLevels(currentCharacter.levels);
+    },
     writeCharacter: function(character){
+        this.updateCharacter(character);
+        
         $('#scheda .character .name h1').html(character.name + ' <small>(' + character.race + ' ' + character.alignment + ' )</small>');
         $('#scheda .character .levels h2').html(scheda.getLevels(rules.getAggregateLevels(currentCharacter.levels)));
         $('#scheda .character .level h2').html('Lvl ' + rules.getTotalLevel(currentCharacter.levels));        

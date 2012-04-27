@@ -36,6 +36,9 @@ var rules = {
             }
             return babTotal;
         },
+        armor:function(character){
+            return 10 + 'armor bonus' + 'shield bonus' + 'dex modifier' + 'enhancement bonuses' + 'deflection bonus' + 'natural armor' + 'dodge bonus' + getSizeBonus(character);
+        },
         bab:{
             melee:function(level){
                 return level;
