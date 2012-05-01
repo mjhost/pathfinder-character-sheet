@@ -13,7 +13,7 @@ scheda = {
                 }
                 $abilities.find('.'+ability + ' th.heading').attr('data-original-title',abilities[ability].reason.join(', '));
                 $abilities.find('.'+ability+ ' .score').text(abilities[ability].score.toString());
-                $abilities.find('.'+ability+ ' .modifier').text(rules.abilities.getModifier(abilities[ability].score).toString());
+                $abilities.find('.'+ability+ ' .modifier').text(rules.utils.toModifierString(abilities[ability].modifier.toString()));
             }
         }
         $abilities.find('th.heading').tooltip({placement:'right'});
@@ -66,8 +66,12 @@ scheda = {
         //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
         //console.log('ranged', bab, parseInt($('table.abilities tr.dexterity td.modifier').text()), sizeBonus);
         
-        $('#scheda table.combat td.attack.melee').html(bab + rules.abilities.getModifier(character.computed.abilities.strength.score) + sizeBonus);
-        $('#scheda table.combat td.attack.ranged').html(bab + rules.abilities.getModifier(character.computed.abilities.dexterity.score) + sizeBonus);
+        $('#scheda table.combat td.attack.melee').html(rules.utils.toModifierString(bab + character.computed.abilities.strength.modifier + sizeBonus));
+        $('#scheda table.combat td.attack.ranged').html(rules.utils.toModifierString(bab + character.computed.abilities.dexterity.modifier + sizeBonus));
+        
+        $('#scheda table.saves td.fortitude').html(rules.utils.toModifierString(character.computed.saves.fortitude.score));
+        $('#scheda table.saves td.reflex').html(rules.utils.toModifierString(character.computed.saves.reflex.score));
+        $('#scheda table.saves td.will').html(rules.utils.toModifierString(character.computed.saves.will.score));
     },
     writeEquip: function(equip){
         var template, slot, $slot;
@@ -100,19 +104,19 @@ scheda = {
         character.computed = {};
         character.computed.abilities =  rules.getAbilities(currentCharacter);
         character.computed.levels = rules.getAggregateLevels(currentCharacter.levels);
+        character.computed.saves = rules.saves.getSaves(currentCharacter);
     },
     writeCharacter: function(character){
         this.updateCharacter(character);
-        
+
         $('#scheda .character .name h1').html(character.name + ' <small>(' + character.race + ' ' + character.alignment + ' )</small>');
-        $('#scheda .character .levels h2').html(scheda.getLevels(rules.getAggregateLevels(currentCharacter.levels)));
-        $('#scheda .character .level h2').html('Lvl ' + rules.getTotalLevel(currentCharacter.levels));        
+        $('#scheda .character .levels h2').html(scheda.getLevels(currentCharacter.computed.levels));
+        $('#scheda .character .level h2').html('Lvl ' + rules.getTotalLevel(currentCharacter.levels)); 
         $('#scheda .character .other-info').html(scheda.getOtherInfos(currentCharacter));
-        
+
         scheda.writeBuffables(currentCharacter);
         scheda.writeEquip(currentCharacter.equip);
     }
-    
 }
 
 
@@ -121,6 +125,7 @@ $(document).ready(function(){
     scheda.writeAvailableBuffs(rules.buffs);
     $.ajax({
         url:'prywin.json',
+        cache:false,
         success:function(data){
             console.log('character loaded');
             currentCharacter = data;

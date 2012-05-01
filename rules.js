@@ -1,4 +1,9 @@
 var rules = {
+    utils:{
+        toModifierString: function(modifier){
+            return (modifier > 0 ? '+' : '') + modifier;
+        }
+    },
     abilities:{
         getModifier: function(score){
             return Math.floor(score/ 2)-5;  
@@ -10,6 +15,85 @@ var rules = {
     },
     sizes:['Colossal', 'Gargantuan', 'Huge', 'Large', 'Medium', 'Small', 'Tiny', 'Diminutive', 'Fine'],
     saves:{
+        getSaves:function(character){
+            var computed, classIterator, bonus, save;
+            computed = {
+                fortitude:{
+                    reason:['constitution ' + rules.utils.toModifierString(character.computed.abilities.constitution.modifier)],
+                    bonuses:{constitution: character.computed.abilities.constitution.modifier},
+                    score:0
+                },
+                reflex:{
+                    reason:['dexterity ' + rules.utils.toModifierString(character.computed.abilities.dexterity.modifier)],
+                    bonuses:{dexterity: character.computed.abilities.dexterity.modifier},
+                    score:0
+                },
+                will:{
+                    reason:['wisdom ' + rules.utils.toModifierString(character.computed.abilities.wisdom.modifier)],
+                    bonuses:{wisdom: character.computed.abilities.wisdom.modifier},
+                    score:0
+                }
+            };
+            for(classIterator in character.computed.levels){
+                if(character.computed.levels.hasOwnProperty(classIterator)){
+                    for(save in computed){
+                        bonus = rules.classes[classIterator].saves[save](character.computed.levels[classIterator]);
+                        computed[save].bonuses.level = (computed[save].bonuses.level || 0) + bonus
+                        computed[save].reason.push(classIterator + ' ' + character.computed.levels[classIterator] + ': ' + rules.utils.toModifierString(bonus));
+                    }
+                }
+            }
+            
+            for(iterator in character.equip.slots){
+                if(character.equip.slots.hasOwnProperty(iterator)){
+                    if(character.equip.slots[iterator] && character.equip.slots[iterator].saves){
+                        for(save in character.equip.slots[iterator].saves){
+                            if(character.equip.slots[iterator].saves.hasOwnProperty(save)){
+                                for(bonus in character.equip.slots[iterator].saves[save]){
+                                    if(character.equip.slots[iterator].saves[save].hasOwnProperty(bonus)){
+                                        value = character.equip.slots[iterator].saves[save][bonus];
+                                        computed[save].bonuses[bonus] = Math.max((computed[save].bonuses[bonus] || 0), value);
+                                        computed[save].reason.push(bonus + rules.utils.toModifierString(value) + " (" + character.equip.slots[iterator].name + " ["+iterator+"])");                                    
+                                        computed[save].hasBonus = true;
+                                    }                                
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    
+            for(iterator in character.buffs){
+                if(character.buffs.hasOwnProperty(iterator)){
+                    if(character.buffs[iterator].saves){
+                        for(save in character.buffs[iterator].saves){
+                            if(character.buffs[iterator].saves.hasOwnProperty(save)){
+                                for(bonus in character.buffs[iterator].saves[save]){
+                                    if(character.buffs[iterator].saves[save].hasOwnProperty(bonus)){
+                                        value = character.buffs[iterator].saves[save][bonus];
+                                        computed[save].bonuses[bonus] = Math.max((computed[ability].bonuses[bonus] || 0), value);
+                                        computed[save].reason.push(bonus + rules.utils.toModifierString(value) + " (" +iterator+")");
+                                        computed[save].hasBonus = true;
+                                    }                                
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            for(save in computed){
+                if(computed.hasOwnProperty(save)){
+                    for(bonus in computed[save].bonuses){
+                        if(computed[save].bonuses.hasOwnProperty(bonus)){
+                            computed[save].score += computed[save].bonuses[bonus];
+                        }
+                    }
+                }
+            }
+            
+            return computed;
+        },
         strong: function(level){
             return Math.floor(level/2)+2;
         },
@@ -71,9 +155,10 @@ var rules = {
                 computed[ability].reason = ['Base ' + character.abilities[ability].base];
                 computed[ability].hasBonus = false;
                 computed[ability].base = character.abilities[ability].base;
+                computed[ability].bonuses = {};
                 if(character.abilities[ability].hasOwnProperty('racial')){
-                    computed[ability].racial = character.abilities[ability].racial;
-                    computed[ability].reason.push('Racial ' + (computed[ability].racial>0?' +':' ') + computed[ability].racial);
+                    computed[ability].bonuses.racial = character.abilities[ability].racial;
+                    computed[ability].reason.push('Racial ' + rules.utils.toModifierString(computed[ability].bonuses.racial));
                 }
             }
         }
@@ -83,7 +168,7 @@ var rules = {
                 if(character.levels[iterator].bonus.abilities){
                     for(ability in character.levels[iterator].bonus.abilities){
                         if(character.levels[iterator].bonus.abilities.hasOwnProperty(ability)){
-                            computed[ability].level = (computed[ability].level || 0) + character.levels[iterator].bonus.abilities[ability].level;
+                            computed[ability].bonuses.level = (computed[ability].bonuses.level || 0) + character.levels[iterator].bonus.abilities[ability].level;
                             computed[ability].reason.push('Level ' + (parseInt(iterator)+1)  + ' +1');
                         }
                     }
@@ -98,9 +183,9 @@ var rules = {
                         if(character.equip.slots[iterator].abilities.hasOwnProperty(ability)){
                             for(bonus in character.equip.slots[iterator].abilities[ability]){
                                 if(character.equip.slots[iterator].abilities[ability].hasOwnProperty(bonus)){
-                                    computed[ability][bonus] = Math.max((computed[ability][bonus] || 0), character.equip.slots[iterator].abilities[ability][bonus]);
                                     value = character.equip.slots[iterator].abilities[ability][bonus];
-                                    computed[ability].reason.push(bonus + (value > 0 ? " +":" ") + value + " (" + character.equip.slots[iterator].name + " ["+iterator+"])");                                    
+                                    computed[ability].bonuses[bonus] = Math.max((computed[ability].bonuses[bonus] || 0), value);
+                                    computed[ability].reason.push(bonus + rules.utils.toModifierString(value) + " (" + character.equip.slots[iterator].name + " ["+iterator+"])");                                    
                                     computed[ability].hasBonus = true;
                                 }                                
                             }
@@ -117,9 +202,9 @@ var rules = {
                         if(character.buffs[iterator].abilities.hasOwnProperty(ability)){
                             for(bonus in character.buffs[iterator].abilities[ability]){
                                 if(character.buffs[iterator].abilities[ability].hasOwnProperty(bonus)){
-                                    computed[ability][bonus] = Math.max((computed[ability][bonus] || 0), character.buffs[iterator].abilities[ability][bonus]);
                                     value = character.buffs[iterator].abilities[ability][bonus];
-                                    computed[ability].reason.push(bonus + (value > 0 ? " +":" ") + value + " (" +iterator+")");
+                                    computed[ability].bonuses[bonus] = Math.max((computed[ability].bonuses[bonus] || 0), value);
+                                    computed[ability].reason.push(bonus + rules.utils.toModifierString(value) + " (" +iterator+")");
                                     computed[ability].hasBonus = true;
                                 }                                
                             }
@@ -131,14 +216,13 @@ var rules = {
         
         for(ability in computed){
             if(computed.hasOwnProperty(ability)){
-                computed[ability].score = 0;
-                for(bonus in computed[ability]){
-                    if(computed[ability].hasOwnProperty(bonus)){
-                        if(typeof(computed[ability][bonus])=="number" && bonus != "reason" && bonus != "score" && bonus != "hasBonus"){
-                            computed[ability].score += computed[ability][bonus];
-                        }
+                computed[ability].score = computed[ability].base;
+                for(bonus in computed[ability].bonuses){
+                    if(computed[ability].bonuses.hasOwnProperty(bonus)){
+                        computed[ability].score += computed[ability].bonuses[bonus];
                     }
                 }
+                computed[ability].modifier = rules.abilities.getModifier(computed[ability].score);
             }
         }
         
