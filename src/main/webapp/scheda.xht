@@ -7,15 +7,12 @@
     <title>scheda</title>
     <meta name="author" content="Paolo Mariotti" />
     <script type="application/x-javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="application/x-javascript" src="assets/js/bootstrap-tooltip.js"></script>
-    <script type="application/x-javascript" src="rules.js"></script>
-    <script type="application/x-javascript" src="buffs.js"></script>
-    <script type="application/x-javascript" src="classes.js"></script>
-    <script type="application/x-javascript" src="wizard.js"></script>
-    <script type="application/x-javascript" src="scheda.js"></script>
-    <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.css" />
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <link type="text/css" rel="stylesheet" href="assets/css/bootstrap-responsive.css" />
+    <script type="application/x-javascript" src="scripts/bootstrap-tooltip.js"></script>
+    <script type="application/x-javascript" src="scripts/pathfinder-character-sheet-min.js"></script>
+    <script type="application/x-javascript" src="scripts/scheda-min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-responsive.css" />
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -91,51 +88,59 @@
                 </table>
               </div>
               <div class="span6">
-                <table class="combat table table-bordered table-striped">
-                  <caption>Combat</caption>
-                  <tr>
-                    <th>AC</th>
-                    <td class="ac"></td>
-                  </tr>
-                  <tr>
-                    <th>Melee Attack Bonus</th>
-                    <td class="attack melee"></td>
-                  </tr>
-                  <tr>
-                    <th>Ranged Attack Bonus</th>
-                    <td class="attack ranged"></td>
-                  </tr>
-                  <tr>
-                    <th>Damage</th>
-                    <td class="damage"></td>
-                  </tr>
-                </table>
-              </div>
-              <div class="span6">
-                <table class="saves table table-bordered table-striped">
-                  <caption>Saves</caption>
-                  <tr>
-                    <th>Fortitude</th>
-                    <td class="fortitude"></td>
-                  </tr>
-                  <tr>
-                    <th>Reflex</th>
-                    <td class="reflex"></td>
-                  </tr>
-                  <tr>
-                    <th>Will</th>
-                    <td class="will"></td>
-                  </tr>
-                </table>
-              </div>
-              <div class="span6">
-                <table class="equip table table-bordered table-striped">
-                  <caption>Equipment</caption>
-                  <tr>
-                    <th>Slot</th>
-                    <th>Name</th>
-                  </tr>
-                </table>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <table class="combat table table-bordered table-striped">
+                      <caption>Combat</caption>
+                      <tr>
+                        <th>AC</th>
+                        <td class="ac"></td>
+                      </tr>
+                      <tr>
+                        <th>Melee Attack Bonus</th>
+                        <td class="attack melee"></td>
+                      </tr>
+                      <tr>
+                        <th>Ranged Attack Bonus</th>
+                        <td class="attack ranged"></td>
+                      </tr>
+                      <tr>
+                        <th>Damage</th>
+                        <td class="damage"></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <table class="saves table table-bordered table-striped">
+                      <caption>Saves</caption>
+                      <tr>
+                        <th>Fortitude</th>
+                        <td class="fortitude"></td>
+                      </tr>
+                      <tr>
+                        <th>Reflex</th>
+                        <td class="reflex"></td>
+                      </tr>
+                      <tr>
+                        <th>Will</th>
+                        <td class="will"></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <table class="equip table table-bordered table-striped">
+                      <caption>Equipment</caption>
+                      <tr>
+                        <th>Slot</th>
+                        <th>Name</th>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
