@@ -1,0 +1,199 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.mjhost</groupId>
+	<artifactId>pathfinder-character-sheet</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Pathfinder Character Sheet</name>
+  
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.googlecode.jslint4java</groupId>
+				<artifactId>jslint4java-maven-plugin</artifactId>
+				<version>2.0.1</version>
+				<executions>
+					<execution>
+						<id>lint</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>lint</goal>
+						</goals>
+						<configuration>
+							<failOnError>true</failOnError>
+							<options>
+								<browser>true</browser>
+								<white>true</white>
+								<maxerr>50</maxerr>
+								<sloppy>true</sloppy>
+								<eqeq>true</eqeq>
+								<plusplus>true</plusplus>
+							</options>
+							<indentSize>4</indentSize>
+							<sourceFolders>
+								<file>src\main\javascript</file>
+							</sourceFolders>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<configuration>
+							<target name="concatJS">
+								<concat destfile="src/main/webapp/scripts/${project.artifactId}.js" fixlastline="yes">
+									<fileset file="src/main/javascript/pathfinder/rules.js" erroronmissingdir="false" />
+									<fileset file="src/main/javascript/pathfinder/classes/classes.js" erroronmissingdir="false" />
+									<fileset dir="src/main/javascript/pathfinder" includes="**/*.js" excludes="**/rules.js,**/classes.js" erroronmissingdir="false"/>
+								</concat>
+								<copy file="src/main/javascript/scheda.js" tofile="src/main/webapp/scripts/scheda-min.js"/>
+								<copy file="src/main/webapp/scripts/${project.artifactId}.js" tofile="src/main/webapp/scripts/${project.artifactId}-min.js"/>
+								<replaceregexp match="console\.(log|dir)\([a-zA-Z0-9,&apos; {}\[\]&quot;:]*\);" flags="gi"
+									replace='' file="src/main/webapp/scripts/${project.artifactId}-min.js"/>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mobilvox.ossi.mojo</groupId>
+				<artifactId>maven-js-plugin</artifactId>
+				<version>1.3.1</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>compress-custom</goal>
+						</goals>
+						<configuration>
+							<classifier>min</classifier>
+							<replaceJavaScript>true</replaceJavaScript>
+							<includes>
+								<include>**/*min.js</include>
+							</includes>
+							<outputDirectory>src/main/webapp/scripts</outputDirectory>
+							<jsDirectory>src/main/webapp/scripts</jsDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<extensions>true</extensions>				
+				<configuration>
+					<jsSrcDir>src/main/javascript</jsSrcDir>
+					<jsTestSrcDir>src/test/javascript</jsTestSrcDir>
+					<junitXmlReportFileName>TEST-${project.artifactId}.xml</junitXmlReportFileName>
+					<sourceIncludes>
+						<include>**/rules.js</include>
+						<include>**/classes/classes.js</include>
+						<include>**/classes/*.js</include>
+						<include>**/buffs/*.js</include>
+					</sourceIncludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.googlecode.jslint4java</groupId>
+										<artifactId>jslint4java-maven-plugin</artifactId>
+										<versionRange>[2.0.1,)</versionRange>
+										<goals>
+											<goal>lint</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.github.searls</groupId>
+										<artifactId>jasmine-maven-plugin</artifactId>
+										<versionRange>[1,)</versionRange>
+										<goals>
+											<goal>resources</goal>
+											<goal>testResources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+<!-- 				<plugin> -->
+<!-- 					<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 					<artifactId>maven-compiler-plugin</artifactId> -->
+<!-- 					<version>2.3.2</version> -->
+<!-- 					<configuration> -->
+<!-- 						<source>1.6</source> -->
+<!-- 						<target>1.6</target> -->
+<!-- 					</configuration> -->
+<!-- 				</plugin> -->
+			</plugins>
+		</pluginManagement>
+	</build>
+  
+</project>
