@@ -99,8 +99,8 @@
     "buffs": null,
     "equip": {
         "slots": {
-            "hat": null,
-            "head": {
+            "Head": null,
+            "Headband": {
                 "name": "Headband of Vast Intelligence +2",
                 "description": "...",
                 "abilities": {
@@ -114,8 +114,9 @@
                     ]
                 }
             },
-            "neck": null,
-            "shoulders": {
+            "Eyes":null,
+            "Neck": null,
+            "Shoulders": {
                 "name": "Cloak of Resistance +1",
                 "description": "...",
                 "saves": {
@@ -130,26 +131,18 @@
                     }
                 }
             },
-            "torso": null,
-            "belt": null,
-            "arms": {
+            "Armor":null,
+            "Shield":null,
+            "Body": null,
+            "Chest":null,
+            "Wrists": {
                 "name": "Bracers of defence +1",
                 "description": "...",
                 "armor": {
-                    "bonus": 1
+                    "armor": 1
                 }
             },
-            "ring1": {
-                "name": "Ring of Sustenance",
-                "description": "...",
-                "abilities": null
-            },
-            "ring2": {
-                "name": "Arcane Bond",
-                "description": "Signet Ring",
-                "abilities": null
-            },
-            "hands": {
+            "Hands": {
                 "name": "Gauntlets of Dexterity +2",
                 "description": "...",
                 "abilities": {
@@ -158,7 +151,18 @@
                     }
                 }
             },
-            "feet": null
+            "Left ring": {
+                "name": "Ring of Sustenance",
+                "description": "...",
+                "abilities": null
+            },
+            "Right ring": {
+                "name": "Arcane Bond",
+                "description": "Signet Ring",
+                "abilities": null
+            },
+            "Belt": null,
+            "Feet": null
         }
     }
 }

@@ -103,10 +103,7 @@ scheda = {
         return aInfo.join(', ');
     },
     updateCharacter:function(character){
-        character.computed = {};
-        character.computed.abilities =  rules.getAbilities(currentCharacter);
-        character.computed.levels = rules.getAggregateLevels(currentCharacter.levels);
-        character.computed.saves = rules.saves.getSaves(currentCharacter);
+        character.computed = rules.utils.updateCharacter(character);
     },
     writeCharacter: function(character){
         this.updateCharacter(character);

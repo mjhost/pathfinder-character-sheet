@@ -44,7 +44,7 @@
         },
         "Mage Armor":{
             "armor":{
-                "bonus":4
+                "armor":4
             }
         },
         "Divine Favor":{
