@@ -58,9 +58,9 @@
             },
             "adjustment":{
                 "parameter": "caster level",
-                "parameter type":"number",
+                "type":"number",
                 "multiplier": function(param){
-                    return Math.max((param-param%3)/3+1, 3);
+                    return Math.max(Math.floor(param/3)+1, 3);
                 }
             }
         },

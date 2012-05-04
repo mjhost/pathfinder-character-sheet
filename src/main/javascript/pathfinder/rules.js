@@ -3,19 +3,20 @@
 var rules = {
     utils:{
         toModifierString: function(modifier){
-            return (modifier > 0 ? '+' : '') + modifier;
+            return (modifier >= 0 ? '+' : '') + modifier;
         },
         updateCharacter:function(character){
-            var computed, slot, ability, save, bonus, value, toReason,
-                extractBonuses, extractInnerBonus, buff, level, caste;
+            var computed,
+                toReason, extractBonuses, extractInnerBonus, loopForBonuses,
+                ability, caste, save, value, level, bonus;
             
             toReason = function(bonus, value, name, slot){
                 if(slot && name){
-                    return (bonus || '') + rules.utils.toModifierString(value) + " (" + name + " ["+slot+"])";                    
+                    return (bonus || '') + (bonus ? ' ' : '') + rules.utils.toModifierString(value) + " (" + name + " ["+slot+"])";                    
                 }else if (name){
-                    return (bonus || '') + rules.utils.toModifierString(value) + " (" + name + ")";
+                    return (bonus || '') + (bonus ? ' ' : '') + rules.utils.toModifierString(value) + " (" + name + ")";
                 }else{
-                    return (bonus || '') + rules.utils.toModifierString(value);
+                    return (bonus || '') + (bonus ? ' ' : '') + rules.utils.toModifierString(value);
                 }
             };
             
@@ -44,6 +45,27 @@ var rules = {
                     }                                
                 }
             };
+            
+            loopForBonuses = function(obj, computed){
+                var prop;
+                //TODO add combat!
+                for(prop in obj){
+                    if(obj.hasOwnProperty(prop) && obj[prop]){
+                        if(obj[prop].abilities){
+                            extractBonuses(obj[prop].abilities, obj[prop].name, prop, computed.abilities);
+                        }
+                        if(obj[prop].saves){
+                            extractBonuses(obj[prop].saves, obj[prop].name, prop, computed.saves);
+                        }
+                        if(obj[prop].armor){
+                            extractInnerBonus(obj[prop].armor, obj[prop].name, prop, computed.armor);
+                        }
+                        if(obj[prop].penalties){
+                            console.warn("there are unaccounted equip penalties!");
+                        }
+                    }
+                }
+            };
 
             computed = {
                 abilities:{},
@@ -53,7 +75,7 @@ var rules = {
                     will:{reason:[], bonuses:{}, score:0}
                 },
                 classes: rules.getAggregateLevels(character.levels),
-                armor:{reason:[], bonuses:{}}
+                armor:{reason:[], bonuses:{}, score:0}
             };
 
             for(ability in character.abilities){
@@ -85,45 +107,13 @@ var rules = {
             for(level in character.levels){
                 if(character.levels.hasOwnProperty(level)){
                     if(character.levels[level].bonus.abilities){
-                        extractBonuses(character.levels[level].bonus.abilities, 'level', level+1, computed.abilities, true);
+                        extractBonuses(character.levels[level].bonus.abilities, 'level', +level+1, computed.abilities, true);
                     }
                 }
             }
 
-            for(slot in character.equip.slots){
-                if(character.equip.slots.hasOwnProperty(slot) && character.equip.slots[slot]){
-                    if(character.equip.slots[slot].abilities){
-                        extractBonuses(character.equip.slots[slot].abilities, character.equip.slots[slot].name, slot, computed.abilities);
-                    }
-                    if(character.equip.slots[slot].saves){
-                        extractBonuses(character.equip.slots[slot].saves, character.equip.slots[slot].name, slot, computed.saves);
-                    }
-                    if(character.equip.slots[slot].armor){
-                        extractInnerBonus(character.equip.slots[slot].armor, character.equip.slots[slot].name, slot, computed.armor);
-                    }
-                    if(character.equip.slots[slot].penalties){
-                        console.warn("there are unaccounted equip penalties!");
-                    }
-                }
-            }
-            
-            for(buff in character.buffs){
-                if(character.buffs.hasOwnProperty(buff)){
-                    if(character.buffs[buff].abilities){
-                        extractBonuses(character.buffs[buff].abilities, buff, "", computed.abilities);
-                    }
-                    if(character.buffs[buff].saves){
-                        extractBonuses(character.buffs[buff].saves, buff, "", computed.saves);
-                    }
-                    if(character.buffs[buff].armor){
-                        extractInnerBonus(character.buffs[buff].armor, buff, "", computed.armor);
-                    }
-                    if(character.buffs[buff].penalties){
-                        console.warn("there are unaccounted buff penalties!");
-                    }
-                }
-            }
-
+            loopForBonuses(character.equip.slots, computed);
+            loopForBonuses(character.buffs, computed);            
 
             for(ability in computed.abilities){
                 if(computed.abilities.hasOwnProperty(ability)){
@@ -154,6 +144,19 @@ var rules = {
                 }
             }
             
+            computed.armor.bonuses.dexterity = computed.abilities.dexterity.modifier;
+            computed.armor.reason.unshift(toReason('dexterity', computed.abilities.dexterity.modifier));
+            computed.armor.bonuses.size = rules.combat.getSizeBonus(character);
+            computed.armor.reason.unshift(toReason('size', computed.armor.bonuses.size));
+            computed.armor.bonuses.base = 10;
+            computed.armor.reason.unshift(toReason(null, 10, 'Base'));
+            
+            for(bonus in computed.armor.bonuses){
+                if(computed.armor.bonuses.hasOwnProperty(bonus)){
+                    computed.armor.score += computed.armor.bonuses[bonus];
+                }
+            }
+            
             return computed;
         }
     },
@@ -167,6 +170,18 @@ var rules = {
         }
     },
     sizes:['Colossal', 'Gargantuan', 'Huge', 'Large', 'Medium', 'Small', 'Tiny', 'Diminutive', 'Fine'],
+    spells:{
+        daily:function(table,casterLevel,spellLevel){
+            if(table && casterLevel && casterLevel<table.length){
+                if(spellLevel && spellLevel<table[casterLevel].length){
+                    return table[casterLevel][spellLevel];
+                }else{
+                    return table[casterLevel];
+                }
+            }
+            return '-';
+        }
+    },
     saves:{
         strong: function(level){
             return Math.floor(level/2)+2;

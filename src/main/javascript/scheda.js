@@ -50,10 +50,10 @@ scheda = {
                     currentCharacter.buffs[buff] = $buff.data('effect');
                     $buff.find('a').prepend("<i class='icon-star-empty icon-yellow'></i>");
                 }
-                if(buffs[buff].hasOwnProperty('abilities')){
-                    scheda.updateCharacter(currentCharacter);
-                    scheda.writeBuffables(currentCharacter);
-                }
+                //if(buffs[buff].hasOwnProperty('abilities')){
+                scheda.updateCharacter(currentCharacter);
+                scheda.writeBuffables(currentCharacter);
+                //}
                 return false;
             });
     },
@@ -67,6 +67,8 @@ scheda = {
         
         //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
         //console.log('ranged', bab, parseInt($('table.abilities tr.dexterity td.modifier').text()), sizeBonus);
+        
+        $('#scheda table.combat td.ac').html(character.computed.armor.score);
         
         $('#scheda table.combat td.attack.melee').html(rules.utils.toModifierString(bab + character.computed.abilities.strength.modifier + sizeBonus));
         $('#scheda table.combat td.attack.ranged').html(rules.utils.toModifierString(bab + character.computed.abilities.dexterity.modifier + sizeBonus));
@@ -104,6 +106,7 @@ scheda = {
     },
     updateCharacter:function(character){
         character.computed = rules.utils.updateCharacter(character);
+        console.warn('updated');
     },
     writeCharacter: function(character){
         this.updateCharacter(character);
@@ -122,6 +125,7 @@ scheda = {
 $(document).ready(function(){
     console.log('document ready');
     scheda.writeAvailableBuffs(rules.buffs);
+    scheda.writeAvailableBuffs(rules.feats);
     $.ajax({
         url:'prywin.json',
         cache:false,

@@ -17,23 +17,32 @@
             }
         },
         spells:{
-            daily:function(casterLevel, level){
-                if(level==0){
-                    return casterLevel == 1 ? 3 : 4;
-                }else if(level==9){
-                    return Math.max(0,casterLevel - 16)||'-';
-                }else if((casterLevel+1)/2<level){
-                    return '-';
-                }else if((casterLevel+1)/2==level){
-                    return 1;
-                }else if(Math.floor((casterLevel)/2) == level){
-                    return 2;
-                }else if((casterLevel-5)/2<level && (casterLevel != 20)){
-                    return 3;
-                }else{
-                    return 4;
-                }
-            }
+            table:[
+                [3,1],
+                [4,2],
+                [4,2,1],
+                [4,3,2],
+                [4,3,2,1],
+                [4,3,3,2],
+                [4,4,3,2,1],
+                [4,4,3,3,2],
+                [4,4,4,3,2,1],
+                [4,4,4,3,3,2],
+                [4,4,4,4,3,2,1],
+                [4,4,4,4,3,3,2],
+                [4,4,4,4,4,3,2,1],
+                [4,4,4,4,4,3,3,2],
+                [4,4,4,4,4,4,3,2,1],
+                [4,4,4,4,4,4,3,3,2],
+                [4,4,4,4,4,4,4,3,2,1],
+                [4,4,4,4,4,4,4,3,3,2],
+                [4,4,4,4,4,4,4,4,3,3],
+                [4,4,4,4,4,4,4,4,4,4]
+            ],
+            daily: function(casterLevel,spellLevel){
+                return rules.spells.daily(rules.classes.wizard.spells.table, casterLevel, spellLevel);
+            },
+            type:"arcane"
         }
     };
 }(window.rules));

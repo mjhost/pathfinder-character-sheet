@@ -54,6 +54,7 @@
 									<fileset file="src/main/javascript/pathfinder/classes/classes.js" erroronmissingdir="false" />
 									<fileset dir="src/main/javascript/pathfinder" includes="**/*.js" excludes="**/rules.js,**/classes.js" erroronmissingdir="false"/>
 								</concat>
+								<copy file="src/main/javascript/scheda.js" tofile="src/main/webapp/scripts/scheda.js"/>
 								<copy file="src/main/javascript/scheda.js" tofile="src/main/webapp/scripts/scheda-min.js"/>
 								<copy file="src/main/webapp/scripts/${project.artifactId}.js" tofile="src/main/webapp/scripts/${project.artifactId}-min.js"/>
 								<replaceregexp match="console\.(log|dir)\([a-zA-Z0-9,&apos; {}\[\]&quot;:]*\);" flags="gi"
