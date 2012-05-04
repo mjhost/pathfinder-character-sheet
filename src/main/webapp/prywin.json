@@ -28,26 +28,26 @@
     },
     "levels": [
         {
-            "class": "rogue",
+            "caste": "rogue",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "cleric",
+            "caste": "cleric",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "cleric",
+            "caste": "cleric",
             "bonus": {
                 "skill": 1,
                 "hp": 0
             }
         },
         {
-            "class": "wizard",
+            "caste": "wizard",
             "bonus": {
                 "skill": 1,
                 "abilities": {
@@ -58,25 +58,25 @@
             }
         },
         {
-            "class": "cleric",
+            "caste": "cleric",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "wizard",
+            "caste": "wizard",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "wizard",
+            "caste": "wizard",
             "bonus": {
                 "skill": 1
             }
         },
         {
-            "class": "wizard",
+            "caste": "wizard",
             "bonus": {
                 "skill": 1,
                 "abilities": {

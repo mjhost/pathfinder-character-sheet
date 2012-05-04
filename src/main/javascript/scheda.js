@@ -62,7 +62,7 @@ scheda = {
        
         scheda.writeAbilities(character.computed.abilities);
         
-        bab = rules.combat.getBaseAttackBonus(character.computed.levels);
+        bab = rules.combat.getBaseAttackBonus(character.computed.classes);
         sizeBonus = rules.combat.getSizeBonus(character);
         
         //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
@@ -109,7 +109,7 @@ scheda = {
         this.updateCharacter(character);
 
         $('#scheda .character .name h1').html(character.name + ' <small>(' + character.race + ' ' + character.alignment + ' )</small>');
-        $('#scheda .character .levels h2').html(scheda.getLevels(currentCharacter.computed.levels));
+        $('#scheda .character .levels h2').html(scheda.getLevels(currentCharacter.computed.classes));
         $('#scheda .character .level h2').html('Lvl ' + rules.getTotalLevel(currentCharacter.levels)); 
         $('#scheda .character .other-info').html(scheda.getOtherInfos(currentCharacter));
 

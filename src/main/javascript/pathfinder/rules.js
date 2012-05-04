@@ -6,14 +6,16 @@ var rules = {
             return (modifier > 0 ? '+' : '') + modifier;
         },
         updateCharacter:function(character){
-            var computed, slot, ability, save, bonus, value, equipReason,
-                extractBonuses, extractInnerBonus, buff, level, classIterator;
+            var computed, slot, ability, save, bonus, value, toReason,
+                extractBonuses, extractInnerBonus, buff, level, caste;
             
-            equipReason = function(bonus, value, name, slot){
-                if(slot !== ""){
-                    return bonus + rules.utils.toModifierString(value) + " (" + name + " ["+slot+"])";                    
+            toReason = function(bonus, value, name, slot){
+                if(slot && name){
+                    return (bonus || '') + rules.utils.toModifierString(value) + " (" + name + " ["+slot+"])";                    
+                }else if (name){
+                    return (bonus || '') + rules.utils.toModifierString(value) + " (" + name + ")";
                 }else{
-                    return bonus + rules.utils.toModifierString(value) + " (" + name + ")";
+                    return (bonus || '') + rules.utils.toModifierString(value);
                 }
             };
             
@@ -37,7 +39,7 @@ var rules = {
                         }else{
                             computed.bonuses[bonus] = Math.max((computed.bonuses[bonus] || 0), value);                            
                         }
-                        computed.reason.push(equipReason(bonus, value, name, slot));
+                        computed.reason.push(toReason(bonus, value, name, slot));
                         computed.hasBonus = true;
                     }                                
                 }
@@ -50,31 +52,31 @@ var rules = {
                     reflex:{reason:[], bonuses:{}, score:0},
                     will:{reason:[], bonuses:{}, score:0}
                 },
-                levels: rules.getAggregateLevels(character.levels),
+                classes: rules.getAggregateLevels(character.levels),
                 armor:{reason:[], bonuses:{}}
             };
 
             for(ability in character.abilities){
                 if(character.abilities.hasOwnProperty(ability)){
                     computed.abilities[ability]={};
-                    computed.abilities[ability].reason = ['Base ' + character.abilities[ability].base];
+                    computed.abilities[ability].reason = [toReason(null,character.abilities[ability].base, 'Base')];
                     computed.abilities[ability].hasBonus = false;
                     computed.abilities[ability].base = character.abilities[ability].base;
                     computed.abilities[ability].bonuses = {};
                     if(character.abilities[ability].hasOwnProperty('racial')){
                         computed.abilities[ability].bonuses.racial = character.abilities[ability].racial;
-                        computed.abilities[ability].reason.push('Racial ' + rules.utils.toModifierString(computed.abilities[ability].bonuses.racial));
+                        computed.abilities[ability].reason.push(toReason('racial',character.abilities[ability].racial));
                     }
                 }
             }
 
-            for(classIterator in computed.levels){
-                if(computed.levels.hasOwnProperty(classIterator)){
+            for(caste in computed.classes){
+                if(computed.classes.hasOwnProperty(caste)){
                     for(save in computed.saves){
                         if(computed.saves.hasOwnProperty(save)){
-                            value = rules.classes[classIterator].saves[save](computed.levels[classIterator]);
+                            value = rules.classes[caste].saves[save](computed.classes[caste]);
                             computed.saves[save].bonuses.level = (computed.saves[save].bonuses.level || 0) + value;
-                            computed.saves[save].reason.push(classIterator + ' ' + computed.levels[classIterator] + ': ' + rules.utils.toModifierString(value));
+                            computed.saves[save].reason.push(toReason(null,value, caste + ' ' + computed.classes[caste]));
                         }
                     }
                 }
@@ -181,11 +183,11 @@ var rules = {
             }
             return (size<0?-1:1)*Math.pow(2,Math.abs(size)-1);
         },
-        getBaseAttackBonus: function(levels){
-            var babTotal=0, cl;
-            for(cl in levels){
-                if(levels.hasOwnProperty(cl)){
-                    babTotal += rules.classes[cl].combat.bab(levels[cl]);
+        getBaseAttackBonus: function(classes){
+            var babTotal=0, caste;
+            for(caste in classes){
+                if(classes.hasOwnProperty(caste)){
+                    babTotal += rules.classes[caste].combat.bab(classes[caste]);
                 }
             }
             return babTotal;
@@ -211,7 +213,7 @@ var rules = {
     getAggregateLevels: function(levels){
         var i, aggregate = {};
         for(i=0;i<levels.length;i++){
-            aggregate[levels[i]['class']] = (aggregate[levels[i]['class']] || 0) + 1;
+            aggregate[levels[i].caste] = (aggregate[levels[i].caste] || 0) + 1;
         }
         return aggregate;  
     }
