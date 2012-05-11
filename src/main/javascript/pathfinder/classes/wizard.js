@@ -44,6 +44,8 @@
             },
             type:"arcane"
         },
-        skills:['appraise', '']
+        skills:['appraise', 'craft', 'fly',
+                'arcana', 'dungeoneering', 'engineering', 'geography', 'history', 'local', 'nature', 'nobility', 'planes', 'religion',
+                'profession', 'spellcraft']
     };
 }(window.rules));
