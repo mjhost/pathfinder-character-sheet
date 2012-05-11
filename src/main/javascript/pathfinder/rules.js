@@ -2,6 +2,7 @@
 
 var rules = {
     classes:{},
+    races:{},
     utils:{
         toModifierString: function(modifier){
             return (modifier >= 0 ? '+' : '') + modifier;
