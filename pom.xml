@@ -51,8 +51,8 @@
 							<target name="concatJS">
 								<concat destfile="src/main/webapp/scripts/${project.artifactId}.js" fixlastline="yes">
 									<fileset file="src/main/javascript/pathfinder/rules.js" erroronmissingdir="false" />
-									<fileset file="src/main/javascript/pathfinder/classes/classes.js" erroronmissingdir="false" />
-									<fileset dir="src/main/javascript/pathfinder" includes="**/*.js" excludes="**/rules.js,**/classes.js" erroronmissingdir="false"/>
+									<fileset file="src/main/javascript/pathfinder/skills/skills.js" erroronmissingdir="false" />
+									<fileset dir="src/main/javascript/pathfinder" includes="**/*.js" excludes="**/rules.js,**/skills.js" erroronmissingdir="false"/>
 								</concat>
 								<copy file="src/main/javascript/scheda.js" tofile="src/main/webapp/scripts/scheda.js"/>
 								<copy file="src/main/javascript/scheda.js" tofile="src/main/webapp/scripts/scheda-min.js"/>

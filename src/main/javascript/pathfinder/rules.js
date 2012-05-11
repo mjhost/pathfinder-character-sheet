@@ -1,6 +1,7 @@
 /*global console*/
 
 var rules = {
+    classes:{},
     utils:{
         toModifierString: function(modifier){
             return (modifier >= 0 ? '+' : '') + modifier;
@@ -10,6 +11,17 @@ var rules = {
                 toReason, extractBonuses, extractInnerBonus, loopForBonuses,
                 ability, caste, save, value, level, bonus;
             
+            computed = {
+                abilities:{},
+                saves:{
+                    fortitude:{reason:[], bonuses:{}, score:0},
+                    reflex:{reason:[], bonuses:{}, score:0},
+                    will:{reason:[], bonuses:{}, score:0}
+                },
+                classes: rules.getAggregateLevels(character.levels),
+                armor:{reason:[], bonuses:{}, score:0}
+            };
+
             toReason = function(bonus, value, name, slot){
                 if(slot && name){
                     return (bonus || '') + (bonus ? ' ' : '') + rules.utils.toModifierString(value) + " (" + name + " ["+slot+"])";                    
@@ -20,7 +32,7 @@ var rules = {
                 }
             };
             
-            extractBonuses = function(items, name, slot, computed, stackable){
+            extractBonuses = function(items, name, slot, stackable){
                 var item, bonus;
                 for(item in items){
                     if(items.hasOwnProperty(item)){
@@ -29,7 +41,7 @@ var rules = {
                 }
             };
 
-            extractInnerBonus = function(item, name, slot, computed, stackable){
+            extractInnerBonus = function(item, name, slot, stackable){
                 var bonus;
                 for(bonus in item){
                     if(item.hasOwnProperty(bonus)){
@@ -46,7 +58,7 @@ var rules = {
                 }
             };
             
-            loopForBonuses = function(obj, computed){
+            loopForBonuses = function(obj){
                 var prop;
                 //TODO add combat!
                 for(prop in obj){
@@ -65,17 +77,6 @@ var rules = {
                         }
                     }
                 }
-            };
-
-            computed = {
-                abilities:{},
-                saves:{
-                    fortitude:{reason:[], bonuses:{}, score:0},
-                    reflex:{reason:[], bonuses:{}, score:0},
-                    will:{reason:[], bonuses:{}, score:0}
-                },
-                classes: rules.getAggregateLevels(character.levels),
-                armor:{reason:[], bonuses:{}, score:0}
             };
 
             for(ability in character.abilities){
@@ -104,11 +105,9 @@ var rules = {
                 }
             }
 
-            for(level in character.levels){
-                if(character.levels.hasOwnProperty(level)){
-                    if(character.levels[level].bonus.abilities){
-                        extractBonuses(character.levels[level].bonus.abilities, 'level', +level+1, computed.abilities, true);
-                    }
+            for(level = 0; level < character.levels; level += 1){
+                if(character.levels[level].bonus.abilities){
+                    extractBonuses(character.levels[level].bonus.abilities, 'level', +level+1, computed.abilities, true);
                 }
             }
 

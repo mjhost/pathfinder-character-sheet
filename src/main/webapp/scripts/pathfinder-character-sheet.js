@@ -1,6 +1,7 @@
 /*global console*/
 
 var rules = {
+    classes:{},
     utils:{
         toModifierString: function(modifier){
             return (modifier >= 0 ? '+' : '') + modifier;
@@ -10,6 +11,17 @@ var rules = {
                 toReason, extractBonuses, extractInnerBonus, loopForBonuses,
                 ability, caste, save, value, level, bonus;
             
+            computed = {
+                abilities:{},
+                saves:{
+                    fortitude:{reason:[], bonuses:{}, score:0},
+                    reflex:{reason:[], bonuses:{}, score:0},
+                    will:{reason:[], bonuses:{}, score:0}
+                },
+                classes: rules.getAggregateLevels(character.levels),
+                armor:{reason:[], bonuses:{}, score:0}
+            };
+
             toReason = function(bonus, value, name, slot){
                 if(slot && name){
                     return (bonus || '') + (bonus ? ' ' : '') + rules.utils.toModifierString(value) + " (" + name + " ["+slot+"])";                    
@@ -20,7 +32,7 @@ var rules = {
                 }
             };
             
-            extractBonuses = function(items, name, slot, computed, stackable){
+            extractBonuses = function(items, name, slot, stackable){
                 var item, bonus;
                 for(item in items){
                     if(items.hasOwnProperty(item)){
@@ -29,7 +41,7 @@ var rules = {
                 }
             };
 
-            extractInnerBonus = function(item, name, slot, computed, stackable){
+            extractInnerBonus = function(item, name, slot, stackable){
                 var bonus;
                 for(bonus in item){
                     if(item.hasOwnProperty(bonus)){
@@ -46,8 +58,9 @@ var rules = {
                 }
             };
             
-            loopForBonuses = function(obj, computed){
+            loopForBonuses = function(obj){
                 var prop;
+                //TODO add combat!
                 for(prop in obj){
                     if(obj.hasOwnProperty(prop) && obj[prop]){
                         if(obj[prop].abilities){
@@ -64,17 +77,6 @@ var rules = {
                         }
                     }
                 }
-            };
-
-            computed = {
-                abilities:{},
-                saves:{
-                    fortitude:{reason:[], bonuses:{}, score:0},
-                    reflex:{reason:[], bonuses:{}, score:0},
-                    will:{reason:[], bonuses:{}, score:0}
-                },
-                classes: rules.getAggregateLevels(character.levels),
-                armor:{reason:[], bonuses:{}, score:0}
             };
 
             for(ability in character.abilities){
@@ -103,11 +105,9 @@ var rules = {
                 }
             }
 
-            for(level in character.levels){
-                if(character.levels.hasOwnProperty(level)){
-                    if(character.levels[level].bonus.abilities){
-                        extractBonuses(character.levels[level].bonus.abilities, 'level', +level+1, computed.abilities, true);
-                    }
+            for(level = 0; level < character.levels; level += 1){
+                if(character.levels[level].bonus.abilities){
+                    extractBonuses(character.levels[level].bonus.abilities, 'level', +level+1, computed.abilities, true);
                 }
             }
 
@@ -232,190 +232,9 @@ var rules = {
         return aggregate;  
     }
 };
-(function(rules){
-    rules.classes = {
-        barbarian:{
-            combat:{
-                bab: function(level){
-                    return rules.combat.bab.melee(level);
-                }                
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.normal(level);
-                },
-                will: function(level){
-                    return rules.saves.normal(level);
-                }
-            }
-        },
-        bard:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.hybrid(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.normal(level);
-                },
-                reflex: function(level){
-                    return rules.saves.strong(level);
-                },
-                will: function(level){
-                    return rules.saves.strong(level);
-                }
-            }
-        },
-        cleric:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.hybrid(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.normal(level);
-                },
-                will: function(level){
-                    return rules.saves.strong(level);
-                }
-            }
-        },
-        druid:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.hybrid(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.normal(level);
-                },
-                will: function(level){
-                    return rules.saves.strong(level);
-                }
-            }
-        },
-        fighter:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.melee(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.normal(level);
-                },
-                will: function(level){
-                    return rules.saves.normal(level);
-                }
-            }
-        },
-        monk:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.hybrid(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.strong(level);
-                },
-                will: function(level){
-                    return rules.saves.strong(level);
-                }
-            }
-        },
-        paladin:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.melee(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.normal(level);
-                },
-                will: function(level){
-                    return rules.saves.strong(level);
-                }
-            }
-        },
-        ranger:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.melee(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.strong(level);
-                },
-                reflex: function(level){
-                    return rules.saves.strong(level);
-                },
-                will: function(level){
-                    return rules.saves.normal(level);
-                }
-            }
-        },
-        rogue:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.hybrid(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.normal(level);
-                },
-                reflex: function(level){
-                    return rules.saves.strong(level);
-                },
-                will: function(level){
-                    return rules.saves.normal(level);
-                }
-            }
-        },
-        sorcerer:{
-            combat:{
-                bab:function(level){
-                    return rules.combat.bab.caster(level);
-                }
-            },
-            saves:{
-                fortitude: function(level){
-                    return rules.saves.normal(level);
-                },
-                reflex: function(level){
-                    return rules.saves.normal(level);
-                },
-                will: function(level){
-                    return rules.saves.strong(level);
-                }
-            }
-        }
-    };
-}(window.rules));
+/*
+ *  see individual classes
+ */
 (function(rules){
     rules.buffs = {
         "Bear's Endurance":{
@@ -578,6 +397,206 @@ var rules = {
 }
 
 */
+(function(rules){
+    rules.classes.barbarian = {
+            combat:{
+                bab: function(level){
+                    return rules.combat.bab.melee(level);
+                }                
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.normal(level);
+                },
+                will: function(level){
+                    return rules.saves.normal(level);
+                }
+            }
+        };
+ }(window.rules));  
+(function(rules){
+    rules.classes.bard = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.normal(level);
+                },
+                reflex: function(level){
+                    return rules.saves.strong(level);
+                },
+                will: function(level){
+                    return rules.saves.strong(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.cleric = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.normal(level);
+                },
+                will: function(level){
+                    return rules.saves.strong(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.druid = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.normal(level);
+                },
+                will: function(level){
+                    return rules.saves.strong(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.fighter = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.melee(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.normal(level);
+                },
+                will: function(level){
+                    return rules.saves.normal(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.monk = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.strong(level);
+                },
+                will: function(level){
+                    return rules.saves.strong(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.paladin = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.melee(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.normal(level);
+                },
+                will: function(level){
+                    return rules.saves.strong(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.ranger = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.melee(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.strong(level);
+                },
+                reflex: function(level){
+                    return rules.saves.strong(level);
+                },
+                will: function(level){
+                    return rules.saves.normal(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.rogue = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.hybrid(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.normal(level);
+                },
+                reflex: function(level){
+                    return rules.saves.strong(level);
+                },
+                will: function(level){
+                    return rules.saves.normal(level);
+                }
+            }
+        };
+ }(window.rules));
+(function(rules){
+    rules.classes.sorcerer = {
+            combat:{
+                bab:function(level){
+                    return rules.combat.bab.caster(level);
+                }
+            },
+            saves:{
+                fortitude: function(level){
+                    return rules.saves.normal(level);
+                },
+                reflex: function(level){
+                    return rules.saves.normal(level);
+                },
+                will: function(level){
+                    return rules.saves.strong(level);
+                }
+            }
+        };
+ }(window.rules));
 (function(rules){
     rules.classes.wizard = {
         combat:{

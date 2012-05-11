@@ -65,9 +65,6 @@ scheda = {
         bab = rules.combat.getBaseAttackBonus(character.computed.classes);
         sizeBonus = rules.combat.getSizeBonus(character);
         
-        //console.log('melee', bab, parseInt($('table.abilities tr.strength td.modifier').text()), sizeBonus);
-        //console.log('ranged', bab, parseInt($('table.abilities tr.dexterity td.modifier').text()), sizeBonus);
-        
         $('#scheda table.combat td.ac').html(character.computed.armor.score);
         
         $('#scheda table.combat td.attack.melee').html(rules.utils.toModifierString(bab + character.computed.abilities.strength.modifier + sizeBonus));
@@ -106,7 +103,7 @@ scheda = {
     },
     updateCharacter:function(character){
         character.computed = rules.utils.updateCharacter(character);
-        console.warn('updated');
+        //console.warn('updated');
     },
     writeCharacter: function(character){
         this.updateCharacter(character);

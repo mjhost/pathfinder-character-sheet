@@ -43,6 +43,7 @@
                 return rules.spells.daily(rules.classes.wizard.spells.table, casterLevel, spellLevel);
             },
             type:"arcane"
-        }
+        },
+        skills:['appraise', '']
     };
 }(window.rules));
