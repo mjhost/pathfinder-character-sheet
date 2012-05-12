@@ -42,10 +42,10 @@
             return skill.untrained || false;    
         };
     rules.skills.getArmorPenalty = function(skill){
-            return skills.key == "strength" || skill.key == "dexterity";
+            return skill.key == "strength" || skill.key == "dexterity";
         };
     rules.skill.checkBonus = function(){
         //computed.abilities[skill.key].modifier + racial.modifier + class_skill.modifier
-    }
+    };
     
  }(window.rules));

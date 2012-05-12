@@ -32,5 +32,5 @@
             bonus: ['Celestial', 'Draconic', 'Gnoll', 'Gnome', 'Goblin', 'Orc', 'Sylvan']
         },
         feats:['Breadth of Experience', 'Elven Accuracy', 'Leaf Singer', 'Light Step', 'Stabbing Shot']
-    }
+    };
 }(window.rules));
